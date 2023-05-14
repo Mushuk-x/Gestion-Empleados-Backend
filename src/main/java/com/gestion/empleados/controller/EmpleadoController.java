@@ -37,15 +37,10 @@ public class EmpleadoController {
 
     // Crear un empleado
     @PostMapping("/empleados")
-    public ResponseEntity<Empleado> CreateEmp(@RequestBody Empleado empleado) {
-        ResponseEntity<Empleado> result;
-        if (empleado.getId() != null) {
-            result = ResponseEntity.badRequest().build();
-        } else {
-            Empleado emp = repository.save(empleado);
-            result = ResponseEntity.ok(emp);
-        }
-        return result;
+    public ResponseEntity<Empleado> CreateEmp(@RequestBody Empleado empleado){
+        if (empleado.getId() != null){return ResponseEntity.badRequest().build();}
+        Empleado emp = repository.save(empleado);
+        return ResponseEntity.ok(emp);
     }
 
 
