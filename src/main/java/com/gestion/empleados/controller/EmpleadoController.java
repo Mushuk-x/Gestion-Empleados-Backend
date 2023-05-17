@@ -60,6 +60,7 @@ public class EmpleadoController {
             return ResponseEntity.notFound().build();
         }
     }
+    //prueba
 
     // Eliminar un empleado
     @DeleteMapping("/empleados/{id}")
