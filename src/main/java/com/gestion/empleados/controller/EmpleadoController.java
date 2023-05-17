@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -42,6 +43,38 @@ public class EmpleadoController {
         Empleado emp = repository.save(empleado);
         return ResponseEntity.ok(emp);
     }
+
+    // Editar un empleado
+    @PutMapping("/empleados/{id}")
+    public ResponseEntity<Empleado> updateEmp(@PathVariable Long id,@RequestBody Empleado empleado){
+        if(id == null){
+           return ResponseEntity.badRequest().build();
+        }
+        if(repository.existsById(empleado.getId())){
+            empleado.setNombre(empleado.getNombre());
+            empleado.setApellido(empleado.getApellido());
+            empleado.setMail(empleado.getMail());
+            Empleado emp = repository.save(empleado);
+            return ResponseEntity.ok(emp);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Eliminar un empleado
+    @DeleteMapping("/empleados/{id}")
+    public ResponseEntity<Empleado> DeleteEmp(@PathVariable Long id){
+        if(!repository.existsById(id)){
+            return ResponseEntity.notFound().build();
+        }
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
+
+
 
 
 
