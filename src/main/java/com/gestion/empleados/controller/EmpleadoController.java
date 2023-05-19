@@ -2,12 +2,16 @@ package com.gestion.empleados.controller;
 
 import com.gestion.empleados.model.Empleado;
 import com.gestion.empleados.repository.EmpleadoRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.util.Arrays.stream;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -39,28 +43,23 @@ public class EmpleadoController {
     // Crear un empleado
     @PostMapping("/empleados")
     public ResponseEntity<Empleado> CreateEmp(@RequestBody Empleado empleado){
-        if (empleado.getId() != null){return ResponseEntity.badRequest().build();}
         Empleado emp = repository.save(empleado);
         return ResponseEntity.ok(emp);
     }
 
+
     // Editar un empleado
     @PutMapping("/empleados/{id}")
     public ResponseEntity<Empleado> updateEmp(@PathVariable Long id,@RequestBody Empleado empleado){
-        if(id == null){
-           return ResponseEntity.badRequest().build();
-        }
-        if(repository.existsById(empleado.getId())){
-            empleado.setNombre(empleado.getNombre());
-            empleado.setApellido(empleado.getApellido());
-            empleado.setMail(empleado.getMail());
-            Empleado emp = repository.save(empleado);
-            return ResponseEntity.ok(emp);
-        }else{
-            return ResponseEntity.notFound().build();
+        Empleado EmpExiste = repository.getReferenceById(id); // se fija si existe este id
+        if(EmpExiste != null){ // si el id no es nulo
+            empleado.setId(id);
+            Empleado updatedEmpresult = repository.save(empleado);
+            return new ResponseEntity<>(updatedEmpresult, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    //prueba
 
     // Eliminar un empleado
     @DeleteMapping("/empleados/{id}")
